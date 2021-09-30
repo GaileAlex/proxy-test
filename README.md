@@ -4,7 +4,6 @@
 
 ## Introduction
 
-Betolimp test assignment
 Create a simple web application having CRUD-operations based on
 proxy-model.
 Required fields of Proxy model should be:

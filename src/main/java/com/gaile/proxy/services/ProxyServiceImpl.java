@@ -5,6 +5,7 @@ import com.gaile.proxy.dto.ProxyDto;
 import com.gaile.proxy.dto.ProxyRequest;
 import com.gaile.proxy.entity.ProxyEntity;
 import com.gaile.proxy.exeption.ApiException;
+import com.gaile.proxy.repository.CheckJdbcRepo;
 import com.gaile.proxy.repository.ProxyRepository;
 import com.gaile.proxy.utils.MapperUtils;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -22,10 +24,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProxyServiceImpl implements ProxyService {
+    private static final String PROXY_NOT_FOUND = "Proxy not found";
+
     private final ProxyRepository proxyRepository;
+    private final CheckJdbcRepo checkJdbcRepo;
     private final MapperUtils mapperUtils;
 
     public void createProxy(ProxyDto proxyDto) {
+        checkUniqueFields(proxyDto);
         ProxyEntity proxyEntity = mapperUtils.toOtherClass(proxyDto, ProxyEntity.class);
         proxyRepository.save(proxyEntity);
     }
@@ -33,7 +39,7 @@ public class ProxyServiceImpl implements ProxyService {
     public ProxyDto getProxyById(String id) {
         Optional<ProxyEntity> optionalProxyDto = proxyRepository.findById(id);
         ProxyEntity proxyEntity = optionalProxyDto.orElseThrow(() ->
-                new ApiException(HttpStatus.NOT_FOUND, "Proxy not found"));
+                new ApiException(HttpStatus.NOT_FOUND, PROXY_NOT_FOUND));
 
         return mapperUtils.toOtherClass(proxyEntity, ProxyDto.class);
     }
@@ -51,14 +57,30 @@ public class ProxyServiceImpl implements ProxyService {
 
     public void editProxy(ProxyDto proxyDto) {
         Optional<ProxyEntity> optionalProxy = proxyRepository.findById(proxyDto.getId());
-        optionalProxy.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Proxy not found"));
+
+        optionalProxy.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, PROXY_NOT_FOUND));
+        checkUniqueFields(proxyDto);
+
         ProxyEntity proxyEntity = mapperUtils.toOtherClass(proxyDto, ProxyEntity.class);
 
         proxyRepository.save(proxyEntity);
     }
 
     public void deleteProxy(String id) {
+        Optional<ProxyEntity> optionalProxyDto = proxyRepository.findById(id);
+        optionalProxyDto.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, PROXY_NOT_FOUND));
+
         proxyRepository.deleteById(id);
+    }
+
+    private void checkUniqueFields(ProxyDto proxyDto) {
+
+        String error = checkJdbcRepo.getCheckNameHostname(proxyDto.getId(),
+                proxyDto.getName(), proxyDto.getHostname());
+
+        if (Objects.nonNull(error)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, String.format("This %s already exists", error));
+        }
     }
 
 }

@@ -4,8 +4,6 @@ import com.gaile.proxy.ProxyApplication;
 import com.gaile.proxy.dto.PageRequest;
 import com.gaile.proxy.dto.ProxyDto;
 import com.gaile.proxy.dto.ProxyRequest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import static com.gaile.proxy.controllers.UtilsTests.asJsonString;
 import static com.gaile.proxy.enums.ProxyType.HTTP;
@@ -43,18 +39,6 @@ class ProxyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void createProxy() throws Exception {

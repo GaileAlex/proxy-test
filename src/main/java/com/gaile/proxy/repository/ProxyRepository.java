@@ -18,7 +18,6 @@ public interface ProxyRepository extends JpaRepository<ProxyEntity, String> {
     @Query(value = "select * from proxy limit :limit offset :offset", nativeQuery = true)
     List<ProxyEntity> getProxyWithPagination(@Param("limit") Integer limit, @Param("offset") Integer offset);
 
-
     List<ProxyEntity> getProxyEntitiesByNameAndProxyType(@Param("name") String name,
                                                          @Param("proxyType") ProxyType proxyType);
 

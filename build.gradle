@@ -33,9 +33,7 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.5'
-
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.4")
-
     implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.1.10'
     implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.5'

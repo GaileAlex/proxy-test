@@ -47,13 +47,13 @@ public class ProxyController {
 
     @PostMapping(path = "/paging")
     @Operation(summary = "Get a proxy with pagination")
-    public ResponseEntity<List<ProxyDto>> getProxyWithPagination(@RequestBody PageRequest pageRequest) {
+    public ResponseEntity<List<ProxyDto>> getProxyWithPagination(@RequestBody @Valid PageRequest pageRequest) {
         return new ResponseEntity<>(proxyService.getProxyWithPagination(pageRequest), HttpStatus.OK);
     }
 
     @PostMapping(path = "/filter")
     @Operation(summary = "Get a proxy filtered by name and type")
-    public ResponseEntity<List<ProxyDto>> getProxyByNameAndType(@RequestBody ProxyRequest proxyRequest) {
+    public ResponseEntity<List<ProxyDto>> getProxyByNameAndType(@RequestBody @Valid ProxyRequest proxyRequest) {
         return new ResponseEntity<>(proxyService.getProxyByNameAndType(proxyRequest), HttpStatus.OK);
     }
 

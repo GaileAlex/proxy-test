@@ -35,5 +35,10 @@ public class RestExceptionHandler {
                 .body(ApiExceptionUtil.convertErrorToJSON(e));
     }
 
+    @ExceptionHandler(ApiException.class)
+    protected ResponseEntity<Object> handleApiError(ApiException e) throws IOException {
+        return ResponseEntity.status(e.getStatus()).contentType(MediaType.APPLICATION_JSON)
+                .body(ApiExceptionUtil.convertErrorToJSON(e));
+    }
 
 }
