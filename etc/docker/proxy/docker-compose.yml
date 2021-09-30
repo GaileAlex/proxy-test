@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  postgres:
+    image: "postgres:12.3"
+    network_mode: bridge
+    container_name: proxy
+    expose:
+      - 5432
+    ports:
+      - 5457:5432
+    environment:
+      - POSTGRES_PASSWORD=proxy
+      - POSTGRES_USER=proxy
+      - POSTGRES_DB=proxy
+    restart: unless-stopped
+    volumes:
+      - proxy-data:/var/lib/postgresql/data:rw
+      - ./scripts:/scripts
+      - ./init:/docker-entrypoint-initdb.d
+
+volumes:
+  proxy-data:
