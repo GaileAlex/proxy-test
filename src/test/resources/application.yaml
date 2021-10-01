@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5457/proxy-test-db
-    username: proxy
+    username: test
     password: proxy
   jpa:
     database: postgresql
