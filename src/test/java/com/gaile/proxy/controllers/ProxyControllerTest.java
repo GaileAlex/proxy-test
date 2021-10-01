@@ -41,7 +41,7 @@ class ProxyControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void createProxy() throws Exception {
+    void createProxy_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         ProxyDto proxyDto = new ProxyDto();
         proxyDto.setName("test1");
         proxyDto.setProxyType(HTTP);
@@ -61,7 +61,27 @@ class ProxyControllerTest {
     }
 
     @Test
-    void getProxyById() throws Exception {
+    void createProxy_getError_whenNameAlreadyExists() throws Exception {
+        ProxyDto proxyDto = new ProxyDto();
+        proxyDto.setName("proxy2");
+        proxyDto.setProxyType(HTTP);
+        proxyDto.setHostname("208.113.153.238");
+        proxyDto.setPort(9191);
+        proxyDto.setUsername("test");
+        proxyDto.setPassword("pass");
+        proxyDto.setIsActive(false);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/create")
+                        .content(asJsonString(proxyDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getProxyById_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get(BASE_URL + "/{id}", "S000001")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +93,17 @@ class ProxyControllerTest {
     }
 
     @Test
-    void getProxyWithPagination() throws Exception {
+    void getProxyById_getError_whenProxyNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/{id}", "S000010")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getProxyWithPagination_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setLimit(3);
         pageRequest.setOffset(1);
@@ -90,7 +120,7 @@ class ProxyControllerTest {
     }
 
     @Test
-    void getProxyByNameAndType() throws Exception {
+    void getProxyByNameAndType_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         ProxyRequest proxyRequest = new ProxyRequest();
         proxyRequest.setName("proxy4");
         proxyRequest.setProxyType(SOCKS5);
@@ -107,7 +137,7 @@ class ProxyControllerTest {
     }
 
     @Test
-    void editProxy() throws Exception {
+    void editProxy_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         ProxyDto proxyDto = new ProxyDto();
         proxyDto.setId("S000005");
         proxyDto.setName("test1");
@@ -128,13 +158,65 @@ class ProxyControllerTest {
     }
 
     @Test
-    void deleteProxy() throws Exception {
+    void editProxy_getError_whenProxyNotFound() throws Exception {
+        ProxyDto proxyDto = new ProxyDto();
+        proxyDto.setId("S000010");
+        proxyDto.setName("test1");
+        proxyDto.setProxyType(HTTP);
+        proxyDto.setHostname("208.113.153.238");
+        proxyDto.setPort(9191);
+        proxyDto.setUsername("test");
+        proxyDto.setPassword("pass");
+        proxyDto.setIsActive(false);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(BASE_URL + "/edit-proxy")
+                        .content(asJsonString(proxyDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void editProxy_getError_whenNameAlreadyExists() throws Exception {
+        ProxyDto proxyDto = new ProxyDto();
+        proxyDto.setId("S000005");
+        proxyDto.setName("proxy3");
+        proxyDto.setProxyType(HTTP);
+        proxyDto.setHostname("208.113.153.238");
+        proxyDto.setPort(9191);
+        proxyDto.setUsername("test");
+        proxyDto.setPassword("pass");
+        proxyDto.setIsActive(false);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(BASE_URL + "/edit-proxy")
+                        .content(asJsonString(proxyDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteProxy_getSuccessfulResponse_whenTheDataIsCorrect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete(BASE_URL + "/delete/{id}", "S000001")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteProxy_getError_whenProxyNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(BASE_URL + "/delete/{id}", "S000010")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
     }
 
 }

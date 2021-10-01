@@ -41,7 +41,7 @@ The following technologies required:
 * Java 14 
 * Postgres 
 
-## Building & setup (production)
+## Building & setup
 
 Follow the steps below:
 1. install docker

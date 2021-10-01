@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 /**
  * @author Aleksei Gaile 30-Sep-21
  */
@@ -21,6 +23,10 @@ public class CheckJdbcRepo {
             "from proxy";
 
     public String getCheckNameHostname(String id, String name, String hostName) {
+        if (Objects.isNull(id)) {
+            id = "";
+        }
+
         var parameters = new MapSqlParameterSource();
         parameters.addValue("id", id);
         parameters.addValue("name", name);
@@ -28,6 +34,5 @@ public class CheckJdbcRepo {
 
         return jdbcTemplate.queryForObject(CHECK_NAME_HOSTNAME, parameters, String.class);
     }
-
 
 }

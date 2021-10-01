@@ -45,13 +45,16 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     public List<ProxyDto> getProxyWithPagination(PageRequest pageRequest) {
-        List<ProxyEntity> proxyEntities = proxyRepository.getProxyWithPagination(pageRequest.getLimit(), pageRequest.getOffset());
+        List<ProxyEntity> proxyEntities = proxyRepository.getProxyWithPagination(pageRequest.getLimit(),
+                pageRequest.getOffset());
+
         return mapperUtils.toOtherList(proxyEntities, ProxyDto.class);
     }
 
     public List<ProxyDto> getProxyByNameAndType(ProxyRequest proxyRequest) {
         List<ProxyEntity> proxyEntities = proxyRepository.getProxyEntitiesByNameAndProxyType(proxyRequest.getName(),
                 proxyRequest.getProxyType());
+
         return mapperUtils.toOtherList(proxyEntities, ProxyDto.class);
     }
 
@@ -68,13 +71,18 @@ public class ProxyServiceImpl implements ProxyService {
 
     public void deleteProxy(String id) {
         Optional<ProxyEntity> optionalProxyDto = proxyRepository.findById(id);
-        optionalProxyDto.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, PROXY_NOT_FOUND));
+        ProxyEntity proxyEntity = optionalProxyDto
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, PROXY_NOT_FOUND));
 
-        proxyRepository.deleteById(id);
+        proxyRepository.delete(proxyEntity);
     }
 
+    /**
+     * Checks fields for unique values in the database
+     *
+     * @param proxyDto model ProxyDto
+     */
     private void checkUniqueFields(ProxyDto proxyDto) {
-
         String error = checkJdbcRepo.getCheckNameHostname(proxyDto.getId(),
                 proxyDto.getName(), proxyDto.getHostname());
 

@@ -20,13 +20,9 @@ public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleException(Exception e) throws IOException {
         log.error("rest error occurred \n " + e.getMessage(), e);
-        if (System.getProperty("spring.profiles.active", "unknown").equals("prod")) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiExceptionUtil.convertErrorToJSON("Internal server error"));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON)
-                    .body(ApiExceptionUtil.convertErrorToJSON(e));
-        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON)
+                .body(ApiExceptionUtil.convertErrorToJSON(e));
     }
 
     @ExceptionHandler(BindException.class)
