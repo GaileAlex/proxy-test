@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {ProxyApplication.class})
-@ActiveProfiles("test")
 @Rollback
 @Transactional
 @AutoConfigureMockMvc
