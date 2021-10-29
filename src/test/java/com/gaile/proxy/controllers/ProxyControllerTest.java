@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Aleksei Gaile 30-Sep-21
  */
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {ProxyApplication.class})
 @Rollback
 @Transactional
